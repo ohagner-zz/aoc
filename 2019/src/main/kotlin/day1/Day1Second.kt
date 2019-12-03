@@ -1,12 +1,11 @@
 package day1
 
 import common.InputReader
-import java.util.stream.Collectors.toList
 import kotlin.math.floor
 
 
 fun main() {
-    val moduleFuelSum: Int = InputReader().fromFile("input/day1/first.txt")
+    val moduleFuelSum: Int = InputReader().fromFileRowSeparated("input/day1/first.txt")
         .map { it.toInt() }
         .map { moduleFuelSum(it) }
         .map { recursiveModuleFuelSum(it) }
