@@ -1,4 +1,4 @@
-package day5
+package day5.first
 
 import common.InputReader
 import java.lang.RuntimeException
@@ -15,10 +15,22 @@ fun main() {
             '1' -> {
                 println("Read opcode 1, next is " + instructions[currentPosition + 1] + ", " + instructions[currentPosition + 2] + ", " + instructions[currentPosition + 3])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
-                val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                val destinationParameter = Parameter(instructions[currentPosition + 3], ParameterMode.IMMEDIATE)
-                val sum = getParameterValue(firstParameter, instructions) + getParameterValue(secondParameter, instructions)
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
+                val secondParameter = Parameter(
+                    instructions.get(currentPosition + 2),
+                    fromValue(paddedOpcode.get(1))
+                )
+                val destinationParameter = Parameter(
+                    instructions[currentPosition + 3],
+                    ParameterMode.IMMEDIATE
+                )
+                val sum = getParameterValue(
+                    firstParameter,
+                    instructions
+                ) + getParameterValue(secondParameter, instructions)
 
                 val destination = getParameterValue(destinationParameter, instructions)
                 instructions[destination] = sum
@@ -27,10 +39,22 @@ fun main() {
             '2' -> {
                 println("Read opcode 2, next is " + instructions[currentPosition + 1] + ", " + instructions[currentPosition + 2] + ", " + instructions[currentPosition + 3])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
-                val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                val destinationParameter = Parameter(instructions[currentPosition + 3], ParameterMode.IMMEDIATE)
-                instructions[getParameterValue(destinationParameter, instructions)] = getParameterValue(firstParameter, instructions) * getParameterValue(secondParameter, instructions)
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
+                val secondParameter = Parameter(
+                    instructions.get(currentPosition + 2),
+                    fromValue(paddedOpcode.get(1))
+                )
+                val destinationParameter = Parameter(
+                    instructions[currentPosition + 3],
+                    ParameterMode.IMMEDIATE
+                )
+                instructions[getParameterValue(destinationParameter, instructions)] = getParameterValue(
+                    firstParameter,
+                    instructions
+                ) * getParameterValue(secondParameter, instructions)
                 currentPosition += 4
             }
             '3' -> {
@@ -44,8 +68,15 @@ fun main() {
             '4' -> {
                 println("Read opcode 4, next is " + instructions[currentPosition + 1])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val destinationParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
-                println("OUTPUT: " + getParameterValue(destinationParameter, instructions))
+                val destinationParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
+                println("OUTPUT: " + getParameterValue(
+                    destinationParameter,
+                    instructions
+                )
+                )
                 currentPosition += 2
             }
             else -> throw RuntimeException("Bad operation")

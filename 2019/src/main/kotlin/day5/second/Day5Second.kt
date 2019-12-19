@@ -1,7 +1,4 @@
-package day5
-
-
-package day5
+package day5.second
 
 import common.InputReader
 import java.lang.RuntimeException
@@ -20,10 +17,22 @@ fun main() {
             '1' -> {
                 println("Read opcode 1, next is " + instructions[currentPosition + 1] + ", " + instructions[currentPosition + 2] + ", " + instructions[currentPosition + 3])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
-                val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                val destinationParameter = Parameter(instructions[currentPosition + 3], ParameterMode.IMMEDIATE)
-                val sum = getParameterValue(firstParameter, instructions) + getParameterValue(secondParameter, instructions)
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
+                val secondParameter = Parameter(
+                    instructions.get(currentPosition + 2),
+                    fromValue(paddedOpcode.get(1))
+                )
+                val destinationParameter = Parameter(
+                    instructions[currentPosition + 3],
+                    ParameterMode.IMMEDIATE
+                )
+                val sum = getParameterValue(
+                    firstParameter,
+                    instructions
+                ) + getParameterValue(secondParameter, instructions)
 
                 val destination = getParameterValue(destinationParameter, instructions)
                 instructions[destination] = sum
@@ -32,10 +41,22 @@ fun main() {
             '2' -> {
                 println("Read opcode 2, next is " + instructions[currentPosition + 1] + ", " + instructions[currentPosition + 2] + ", " + instructions[currentPosition + 3])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
-                val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                val destinationParameter = Parameter(instructions[currentPosition + 3], ParameterMode.IMMEDIATE)
-                instructions[getParameterValue(destinationParameter, instructions)] = getParameterValue(firstParameter, instructions) * getParameterValue(secondParameter, instructions)
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
+                val secondParameter = Parameter(
+                    instructions.get(currentPosition + 2),
+                    fromValue(paddedOpcode.get(1))
+                )
+                val destinationParameter = Parameter(
+                    instructions[currentPosition + 3],
+                    ParameterMode.IMMEDIATE
+                )
+                instructions[getParameterValue(destinationParameter, instructions)] = getParameterValue(
+                    firstParameter,
+                    instructions
+                ) * getParameterValue(secondParameter, instructions)
                 currentPosition += 4
             }
             '3' -> {
@@ -49,18 +70,32 @@ fun main() {
             '4' -> {
                 println("Read opcode 4, next is " + instructions[currentPosition + 1])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val destinationParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
-                println("OUTPUT: " + getParameterValue(destinationParameter, instructions))
+                val destinationParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
+                println("OUTPUT: " + getParameterValue(
+                    destinationParameter,
+                    instructions
+                )
+                )
                 currentPosition += 2
             }
             '5' -> {
                 println("Read opcode 5, next is " + instructions[currentPosition + 1])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
                 val firstParameterValue = getParameterValue(firstParameter, instructions)
                 if(firstParameterValue != 0) {
-                    val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                    val secondParameterValue = getParameterValue(secondParameter, instructions)
+                    val secondParameter = Parameter(
+                        instructions.get(currentPosition + 2),
+                        fromValue(paddedOpcode.get(1))
+                    )
+                    val secondParameterValue =
+                        getParameterValue(secondParameter, instructions)
                     println("Moving instruction pointer to $secondParameterValue")
                     currentPosition = secondParameterValue
                 } else {
@@ -70,11 +105,18 @@ fun main() {
             '6' -> {
                 println("Read opcode 6, next is " + instructions[currentPosition + 1])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
                 val firstParameterValue = getParameterValue(firstParameter, instructions)
                 if(firstParameterValue == 0) {
-                    val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                    val secondParameterValue = getParameterValue(secondParameter, instructions)
+                    val secondParameter = Parameter(
+                        instructions.get(currentPosition + 2),
+                        fromValue(paddedOpcode.get(1))
+                    )
+                    val secondParameterValue =
+                        getParameterValue(secondParameter, instructions)
                     println("Moving instruction pointer to $secondParameterValue")
                     currentPosition = secondParameterValue
                 } else {
@@ -84,11 +126,21 @@ fun main() {
             '7' -> {
                 println("Read opcode 7, next is " + instructions[currentPosition + 1] + ", " + instructions[currentPosition + 2] + ", " + instructions[currentPosition + 3])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
                 val firstParameterValue = getParameterValue(firstParameter, instructions)
-                val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                val secondParameterValue = getParameterValue(secondParameter, instructions)
-                val destinationParameter = Parameter(instructions[currentPosition + 3], ParameterMode.IMMEDIATE)
+                val secondParameter = Parameter(
+                    instructions.get(currentPosition + 2),
+                    fromValue(paddedOpcode.get(1))
+                )
+                val secondParameterValue =
+                    getParameterValue(secondParameter, instructions)
+                val destinationParameter = Parameter(
+                    instructions[currentPosition + 3],
+                    ParameterMode.IMMEDIATE
+                )
                 val destination = getParameterValue(destinationParameter, instructions)
                 if(firstParameterValue < secondParameterValue) {
                     instructions[destination] = 1
@@ -100,11 +152,21 @@ fun main() {
             '8' -> {
                 println("Read opcode 8, next is " + instructions[currentPosition + 1] + ", " + instructions[currentPosition + 2] + ", " + instructions[currentPosition + 3])
                 val paddedOpcode: String = opCode.toString().padStart(5, '0')
-                val firstParameter = Parameter(instructions.get(currentPosition + 1), fromValue(paddedOpcode.get(2)))
+                val firstParameter = Parameter(
+                    instructions.get(currentPosition + 1),
+                    fromValue(paddedOpcode.get(2))
+                )
                 val firstParameterValue = getParameterValue(firstParameter, instructions)
-                val secondParameter = Parameter(instructions.get(currentPosition + 2), fromValue(paddedOpcode.get(1)))
-                val secondParameterValue = getParameterValue(secondParameter, instructions)
-                val destinationParameter = Parameter(instructions[currentPosition + 3], ParameterMode.IMMEDIATE)
+                val secondParameter = Parameter(
+                    instructions.get(currentPosition + 2),
+                    fromValue(paddedOpcode.get(1))
+                )
+                val secondParameterValue =
+                    getParameterValue(secondParameter, instructions)
+                val destinationParameter = Parameter(
+                    instructions[currentPosition + 3],
+                    ParameterMode.IMMEDIATE
+                )
                 val destination = getParameterValue(destinationParameter, instructions)
                 if(firstParameterValue == secondParameterValue) {
                     instructions[destination] = 1

@@ -11,6 +11,8 @@ class InputReader {
     }
 
     fun fromFileCommaSeparated(filename: String): List<String> {
-        return File(Thread.currentThread().contextClassLoader.getResource(filename).toURI()).readText(Charset.forName("UTF-8")).split(",")
+        return fromCommaSeparated(File(Thread.currentThread().contextClassLoader.getResource(filename).toURI()).readText(Charset.forName("UTF-8")))
     }
+
+    fun fromCommaSeparated(value: String): List<String> { return value.split(",")}
 }
