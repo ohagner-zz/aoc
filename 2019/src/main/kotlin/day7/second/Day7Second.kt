@@ -1,9 +1,8 @@
 package day7.second
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import common.InputReader
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Stream
@@ -14,15 +13,17 @@ class ProgramResult(val value: Int, val instructions: MutableList<Int>, val halt
 suspend fun main() {
     val start = System.currentTimeMillis()
     var instructions: MutableList<Int> = LinkedList()
-    //instructions.addAll(InputReader().fromFileCommaSeparated("input/day7/input.txt").map { it.toInt()})
-    instructions.addAll("3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5".split(",").map { it.toInt() })
+    instructions.addAll(InputReader().fromFileCommaSeparated("input/day7/input.txt").map { it.toInt()})
+//    instructions.addAll("3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5".split(",").map { it.toInt() })
     var maxResult = AmplificationResult("00000", 0)
-    val phaseSettings = listOf("98765")//getAvailablePhaseSettings()
-    var feedback = 0;
+    val phaseSettings = getAvailablePhaseSettings()
     phaseSettings.forEach {
-        val result = runAmplificationCircuit(it.toList(), instructions, feedback)
-        feedback = result.output
+        println("Running phase $it")
+        if(it.equals("98765")) { println("hej")}
+        val result = runAmplificationCircuit(it.toList(), instructions)
+        println("phase $it result = ${result.output}")
         if (result.output > maxResult.output) {
+            println("${result.output} is larger than ${maxResult.output}")
             maxResult = result
         }
     }
@@ -30,31 +31,51 @@ suspend fun main() {
     println("Max result is ${maxResult.output} for phase setting ${maxResult.phaseSetting}. Executed in $elapsed ms")
 }
 
-suspend fun runAmplificationCircuit(phaseSetting: List<Char>, instructions: List<Int>, feedback: Int): AmplificationResult {
-    var amplificationOutput = ProgramResult(0, emptyList<Int>().toMutableList())
-    var amplificationInput = ProgramResult(feedback, instructions.toMutableList())
+fun runAmplificationCircuit(
+    phaseSetting: List<Char>,
+    instructions: List<Int>
+): AmplificationResult {
+    var amplificationOutput = 0
     val programInstructions = instructions.toList()
     val channels = mutableListOf<Channel<Int>>()
-    phaseSetting
-        .map { it.toString().toInt() }
-        .forEachIndexed { setting, index ->
-            val inputChannel = Channel<Int>()
-            channels.set(index, inputChannel)
-            inputChannel.send(setting)
-            inputChannel.send(0)
-            GlobalScope.launch {
-                amplificationOutput = runProgram(
-                    channels[index], amplificationInput.value),
-                    programInstructions.toMutableList()
-                )
+    repeat(phaseSetting.size) { channels.add(it, Channel<Int>(4)) }
+    val resultChannel = Channel<Int>(4)
+    println("Before blocking")
+    var deferredList: MutableList<Deferred<Unit>> = mutableListOf()
+    runBlocking {
+        GlobalScope.launch {
+            for (x in resultChannel) {
+                println("Amplification value: $x, sending to feedback loop")
+                amplificationOutput = x
+                channels[0].send(x)
             }
-            amplificationInput = amplificationOutput
         }
-    return AmplificationResult(phaseSetting.joinToString(""), amplificationOutput.value)
+        phaseSetting
+            .map { it.toString().toInt() }
+            .forEachIndexed { index, setting ->
+
+                val inputChannel = channels[index]
+                inputChannel.send(setting)
+                if (index == 0) {
+                    inputChannel.send(0)
+                }
+
+                val outputChannel = when (index) {
+                    4 -> resultChannel
+                    else -> channels[index + 1]
+                }
+                deferredList.add(GlobalScope.async {
+                    runProgram(inputChannel, outputChannel, programInstructions.toMutableList())
+                })
+            }
+        deferredList.awaitAll()
+
+    }
+    println("After blocking")
+    return AmplificationResult(phaseSetting.joinToString(""), amplificationOutput)
 }
 
-suspend fun runProgram(input: Channel<Int>, output: Channel<Int> programInstructions: List<Int>): ProgramResult {
-    var output = -1;
+suspend fun runProgram(inputChannel: Channel<Int>, outputChannel: Channel<Int>, programInstructions: List<Int>): Unit {
     var instructions = programInstructions.toMutableList()
     var currentPosition = 0
     while (instructions[currentPosition] != 99) {
@@ -62,8 +83,8 @@ suspend fun runProgram(input: Channel<Int>, output: Channel<Int> programInstruct
         val instruction = when (getOperation(opCode)) {
             '1' -> Add()
             '2' -> Multiply()
-            '3' -> InputInstruction(input.receive())
-            '4' -> OutputInstruction()
+            '3' -> InputInstruction(inputChannel.receive())
+            '4' -> OutputInstruction(outputChannel)
             '5' -> JumpIfTrue()
             '6' -> JumpIfFalse()
             '7' -> LessThan()
@@ -74,8 +95,7 @@ suspend fun runProgram(input: Channel<Int>, output: Channel<Int> programInstruct
         currentPosition = response.nextPosition
         instructions = response.updatedInstructions
     }
-
-    return ProgramResult(output, instructions, instructions[currentPosition] == 99)
+    outputChannel.cancel()
 }
 
 private fun getOperation(value: Int): Char {
