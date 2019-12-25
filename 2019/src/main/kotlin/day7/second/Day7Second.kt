@@ -8,9 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Stream
 import kotlin.streams.toList
 
-class ProgramResult(val value: Int, val instructions: MutableList<Int>, val halted: Boolean = false)
-
-suspend fun main() {
+fun main() {
     val start = System.currentTimeMillis()
     var instructions: MutableList<Int> = LinkedList()
     instructions.addAll(InputReader().fromFileCommaSeparated("input/day7/input.txt").map { it.toInt()})

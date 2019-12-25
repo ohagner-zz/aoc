@@ -6,6 +6,10 @@ import java.nio.charset.Charset
 
 class InputReader {
 
+    fun fromFileAsString(filename: String): String {
+        return File(Thread.currentThread().contextClassLoader.getResource(filename).toURI()).readText()
+    }
+
     fun fromFileRowSeparated(filename: String): List<String> {
         return File(Thread.currentThread().contextClassLoader.getResource(filename).toURI()).readLines(Charset.forName("UTF-8"))
     }
