@@ -5,12 +5,14 @@ class JumpIfFalse: Instruction {
         val currentPosition = positions.currentPosition
         val relativeBase = positions.relativeBase
         val parameterModes = getParameterModes(memory.get(currentPosition))
-        val firstParameter = getParameterValue(memory.get(currentPosition + 1), relativeBase, parameterModes[0], memory)
-        if(firstParameter == 0L) {
-            val secondParameter = getParameterValue(memory.get(currentPosition + 2), relativeBase, parameterModes[1], memory)
-            return InstructionResponse(ProgramPositions(secondParameter, relativeBase), memory)
+        val firstParameterValue = getParameterValue(memory.get(currentPosition + 1), relativeBase, parameterModes[0], memory)
+        return if(firstParameterValue == 0L) {
+            val secondParameterValue = getParameterValue(memory.get(currentPosition + 2), relativeBase, parameterModes[1], memory)
+            println("JumpIfFalse: Jumping to $secondParameterValue")
+            InstructionResponse(ProgramPositions(secondParameterValue, relativeBase), memory)
         } else {
-            return InstructionResponse(ProgramPositions(currentPosition + 3, relativeBase), memory)
+            println("JumpIfFalse: Jumping to ${currentPosition + 3}")
+            InstructionResponse(ProgramPositions(currentPosition + 3, relativeBase), memory)
         }
 
     }

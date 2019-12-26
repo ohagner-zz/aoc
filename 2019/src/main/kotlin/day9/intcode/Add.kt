@@ -5,10 +5,11 @@ class Add: Instruction {
         val currentPosition = positions.currentPosition
         val relativeBase = positions.relativeBase
         val parameterModes = getParameterModes(memory.get(currentPosition))
-        val firstParameter = getParameterValue(memory.get(currentPosition + 1), relativeBase, parameterModes[0], memory)
-        val secondParameter = getParameterValue(memory.get(currentPosition + 2), relativeBase, parameterModes[1], memory)
-        val destination = memory.get(currentPosition + 3)
-        memory.set(destination, firstParameter + secondParameter)
+        val firstParameterValue = getParameterValue(memory.get(currentPosition + 1), relativeBase, parameterModes[0], memory)
+        val secondParameterValue = getParameterValue(memory.get(currentPosition + 2), relativeBase, parameterModes[1], memory)
+        val destination = memory.getOutputDestination(currentPosition + 3, relativeBase, parameterModes[2])
+        println("Add: Writing ${firstParameterValue + secondParameterValue} to $destination")
+        memory.set(destination, firstParameterValue + secondParameterValue)
         return InstructionResponse(ProgramPositions(currentPosition + 4, relativeBase), memory)
     }
 }

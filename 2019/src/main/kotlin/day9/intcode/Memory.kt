@@ -21,10 +21,11 @@ class Memory {
     }
 
     fun getOutputDestination(position: Long, relativeBase: Long, parameterMode: ParameterMode): Long {
+        val positionValue = get(position)
         return when(parameterMode) {
-            ParameterMode.POSITION -> position
+            ParameterMode.POSITION -> positionValue
             ParameterMode.IMMEDIATE -> throw RuntimeException("Immediate mode not allowed for output")
-            ParameterMode.RELATIVE -> position + relativeBase
+            ParameterMode.RELATIVE -> positionValue + relativeBase
         }
     }
 }

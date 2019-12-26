@@ -9,7 +9,7 @@ class OutputInstruction(val outputChannel: Channel<Long>): Instruction {
 
         val parameterModes = getParameterModes(memory.get(currentPosition))
         val output = getParameterValue(memory.get(currentPosition + 1), relativeBase, parameterModes[0], memory)
-//        println("Going to output value ${memory.get(0)}")
+        println("Output: Writing value $output")
         outputChannel.send(output)
 //        println("OUTPUT: $output")
         return InstructionResponse(ProgramPositions(currentPosition + 2, relativeBase), memory)
