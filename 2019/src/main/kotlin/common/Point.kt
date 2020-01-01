@@ -1,5 +1,8 @@
 package common
 
+import java.math.BigDecimal
+import kotlin.math.*
+
 
 class Point(val x: Int, val y: Int) {
     override fun equals(other: Any?): Boolean {
@@ -12,6 +15,15 @@ class Point(val x: Int, val y: Int) {
         if (y != other.y) return false
 
         return true
+    }
+
+    fun angleTo(point: Point): Double {
+        val angle = atan2((point.y - this.y).toDouble(), (point.x - this.x).toDouble())
+        return angle
+    }
+
+    fun distanceTo(point: Point): Double {
+        return hypot(abs(point.x - this.x).toDouble(), abs(point.y - this.y).toDouble())
     }
 
     override fun hashCode(): Int {
