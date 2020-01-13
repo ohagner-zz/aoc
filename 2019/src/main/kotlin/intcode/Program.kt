@@ -8,7 +8,10 @@ class Program(var memory: Memory, val input: Channel<Long>, val output: Channel<
     private var currentPosition: Long = 0
     private var relativeBase: Long = 0
 
+    var isRunning = false
+
     suspend fun run(): Unit {
+        isRunning = true
         while(memory.get(currentPosition) != 99L) {
             val opCode: Long = memory.get(currentPosition)
             val instruction =  when(getOperation(opCode)) {
@@ -26,10 +29,12 @@ class Program(var memory: Memory, val input: Channel<Long>, val output: Channel<
             val response = instruction.execute(ProgramPositions(currentPosition, relativeBase), memory)
             currentPosition = response.positions.currentPosition
             relativeBase = response.positions.relativeBase
-//            memory = response.memory
         }
+
+        isRunning = false
         input.close()
         output.close()
+        println("DONE!!")
     }
 
     private fun getOperation(value: Long): Char {

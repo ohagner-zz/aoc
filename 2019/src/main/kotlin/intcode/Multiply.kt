@@ -10,7 +10,7 @@ class Multiply: Instruction {
         val secondParameter = getParameterValue(memory.get(currentPosition + 2), relativeBase, parameterModes[1], memory)
 //        println("Retrieving parameter value from ${currentPosition+3}, parameterMode: ${parameterModes[2]}")
         val destination = memory.getOutputDestination(currentPosition + 3, relativeBase, parameterModes[2])
-        println("Multiplying $firstParameter with $secondParameter, writing result to $destination")
+//        println("Multiplying $firstParameter with $secondParameter, writing result to $destination")
         memory.set(destination, firstParameter * secondParameter)
 //        println("Value in $destination is ${memory.get(destination)}")
         return InstructionResponse(ProgramPositions(currentPosition + 4, relativeBase), memory)

@@ -8,7 +8,7 @@ class Add: Instruction {
         val firstParameterValue = getParameterValue(memory.get(currentPosition + 1), relativeBase, parameterModes[0], memory)
         val secondParameterValue = getParameterValue(memory.get(currentPosition + 2), relativeBase, parameterModes[1], memory)
         val destination = memory.getOutputDestination(currentPosition + 3, relativeBase, parameterModes[2])
-        println("Add: Writing ${firstParameterValue + secondParameterValue} to $destination")
+//        println("Add: Writing ${firstParameterValue + secondParameterValue} to $destination")
         memory.set(destination, firstParameterValue + secondParameterValue)
         return InstructionResponse(ProgramPositions(currentPosition + 4, relativeBase), memory)
     }

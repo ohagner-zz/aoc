@@ -1,5 +1,6 @@
 package common
 
+import common.Direction.*
 import java.math.BigDecimal
 import kotlin.math.*
 
@@ -24,6 +25,15 @@ class Point(val x: Int, val y: Int) {
 
     fun distanceTo(point: Point): Double {
         return hypot(abs(point.x - this.x).toDouble(), abs(point.y - this.y).toDouble())
+    }
+
+    fun move(direction: Direction): Point {
+        return when(direction) {
+            UP -> Point(this.x, this.y + 1)
+            DOWN -> Point(this.x, this.y - 1)
+            LEFT -> Point(this.x -1, this.y)
+            RIGHT -> Point(this.x + 1, this.y)
+        }
     }
 
     override fun hashCode(): Int {

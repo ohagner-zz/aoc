@@ -1,7 +1,7 @@
 package intcode
 
 
-class Memory{
+class Memory {
     private val memoryMap = mutableMapOf<Long, Long>()
 
     fun get(key: Long): Long {
