@@ -25,6 +25,7 @@ suspend fun main() {
 
     val grid = Grid(BLACK)
     var gridPosition = Point(2, 2)
+    grid.set(gridPosition, WHITE)
     var gridDirection = UP
     try {
         while (!runningProgram.isCompleted) {
