@@ -14,6 +14,7 @@ class Program(var memory: Memory, val input: Channel<Long>, val output: Channel<
         isRunning = true
         while(memory.get(currentPosition) != 99L) {
             val opCode: Long = memory.get(currentPosition)
+//            println("Opcode : $opCode")
             val instruction =  when(getOperation(opCode)) {
                 '1' -> Add()
                 '2' -> Multiply()

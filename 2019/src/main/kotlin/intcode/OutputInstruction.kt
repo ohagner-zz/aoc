@@ -2,7 +2,7 @@ package intcode
 
 import kotlinx.coroutines.channels.Channel
 
-class OutputInstruction(val outputChannel: Channel<Long>): Instruction {
+class OutputInstruction(private val outputChannel: Channel<Long>): Instruction {
     override suspend fun execute(positions: ProgramPositions, memory: Memory): InstructionResponse {
         val currentPosition = positions.currentPosition
         val relativeBase = positions.relativeBase
